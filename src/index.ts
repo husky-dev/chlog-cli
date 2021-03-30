@@ -9,7 +9,7 @@ const cwd = process.cwd();
 
 const processArgs = (args: ParsedArgs) => {
   // Check for verbose mode
-  const logLevel = args.v === true ? LogLevel.trace : LogLevel.none;
+  const logLevel = args.debug === true ? LogLevel.trace : LogLevel.none;
   log.setLevel(logLevel);
   // Current path
   log.debug('cwd=', cwd);
@@ -25,4 +25,4 @@ const processArgs = (args: ParsedArgs) => {
   }
 };
 
-processArgs(minimist(((process.argv as unknown[]) as string[]).slice(2)));
+processArgs(minimist(process.argv.slice(2)));
