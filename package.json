@@ -1,0 +1,25 @@
+{
+  "name": "chlog-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
+  "license": "MIT",
+  "bin": {
+    "chlog": "./dist/index.js"
+  },
+  "scripts": {
+    "dist": "tsc",
+    "lint": "yarn lint:types",
+    "lint:types": "tsc --noEmit --skipLibCheck",
+    "link": "yarn global add file:$PWD"
+  },
+  "devDependencies": {
+    "@types/minimist": "1.2.1",
+    "@types/node": "14.14.37",
+    "prettier": "2.2.1",
+    "typescript": "4.2.3"
+  },
+  "dependencies": {
+    "minimist": "1.2.5"
+  }
+}

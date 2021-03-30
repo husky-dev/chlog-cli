@@ -1,0 +1,11 @@
+.cache
+.DS_*
+.idea
+.jira.d
+.tmp
+.vscode
+*-lock.json
+coverage
+dist
+node_modules
+yarn-error.log
