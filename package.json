@@ -1,13 +1,24 @@
 {
   "name": "chlog-cli",
+  "description": "CLI tool for managing CHANGELOG.md file based on \"Keep a Changelog\" file format",
   "version": "1.0.0",
-  "main": "index.js",
-  "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
+  "keywords": ["changelog", "cli"],
+  "author": "Jaroslav Khorishchenko <jaro@smartapp.dev>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/husky-dev/chlog-cli.git"
+  },
   "license": "MIT",
+  "main": "./dist/index.js",
   "bin": {
     "chlog": "./dist/index.js",
     "chlog-cli": "./dist/index.js"
   },
+  "files": [
+    "README.md",
+    "package.json",
+    "dist"
+  ],
   "scripts": {
     "dist": "yarn dist:dev",
     "dist:dev": "webpack --mode=development",
