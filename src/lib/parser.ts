@@ -11,7 +11,7 @@ export const strToChangelog = (val: string): Changelog => {
     const verData = strToVersion(line);
     if (verData) {
       if (curVersion) {
-        versions.push({ ...curVersion, sections: strsToSections(curBody) });
+        versions.push({ ...curVersion, sections: strLinesToSections(curBody) });
       }
       curVersion = verData;
       curBody = [];
@@ -20,7 +20,7 @@ export const strToChangelog = (val: string): Changelog => {
     }
   }
   if (curVersion) {
-    versions.push({ ...curVersion, sections: strsToSections(curBody) });
+    versions.push({ ...curVersion, sections: strLinesToSections(curBody) });
   }
 
   return { versions };
@@ -31,7 +31,7 @@ const strToVersion = (val: string): ChangelogVersion | undefined => {
   return match ? { name: match[1], date: match[2].trim(), sections: [] } : undefined;
 };
 
-const strsToSections = (val: string[]): ChangelogSection[] => {
+const strLinesToSections = (val: string[]): ChangelogSection[] => {
   const sections: ChangelogSection[] = [];
   let curName: string | undefined = undefined;
   let curItems: string[] = [];
@@ -57,7 +57,7 @@ const strsToSections = (val: string[]): ChangelogSection[] => {
   return sections;
 };
 
-const strToSectionName = (val: string): string | undefined => {
+export const strToSectionName = (val: string): string | undefined => {
   const match = /^###\s*(.+)$/.exec(val);
   return match ? match[1].trim() : undefined;
 };
