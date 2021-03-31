@@ -33,7 +33,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx}\"",
     "test": "jest",
     "clear": "rm -rf .cache dist",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "lint-staged": {
     "{*.ts,*tsx}": [
