@@ -20,5 +20,5 @@ export interface ChangelogSection {
 export interface ChangelogGenOpt {
   header?: boolean;
   sortSections?: boolean;
-  sortRecords?: boolean;
+  sortItems?: boolean;
 }

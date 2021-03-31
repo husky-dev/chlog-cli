@@ -1,17 +1,18 @@
 /* eslint-disable no-console */
-import { getChangelog } from 'lib';
+import { processCmd } from 'lib';
 import minimist from 'minimist';
 
-import { getArgsBoolParam, Log, LogLevel, UnknownParsedArgs } from './utils';
+import { CliOpts, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
 
 const log = Log('cli', LogLevel.info);
-const cwd = process.cwd();
 
 const help = `
 CLI tool for managing CHANGELOG.md file based on "Keep a Changelog" file format
 
 Usage:
   chlog get -v "1.2"
+
+-p, --path   Changelog file path
 
 Debug options:
   -v, --version   Show chlog version
@@ -20,27 +21,25 @@ Debug options:
 `;
 
 const processArgs = (args: UnknownParsedArgs) => {
-  // Check for verbose mode
-  const logLevel = args.debug === true ? LogLevel.trace : LogLevel.none;
+  const logLevel = getArgsBoolParam(args, ['debug']) ? LogLevel.trace : LogLevel.none;
   log.setLevel(logLevel);
-  log.debug('cwd=', cwd);
-  if (args._.length) {
-    const cmd = args._[0];
-    return processCmd(cmd, args);
-  } else {
-    return processFlags(args);
-  }
-};
 
-const processCmd = (cmd: string, args: UnknownParsedArgs) => {
-  if (cmd === 'get') {
-    return processGetCmd(args);
-  }
-  return log.errAndExit(`Unknown command ${cmd}`);
-};
+  const argsFilePath = getArgsStrParam(args, ['p', 'path']);
+  const opt: CliOpts = {
+    filePath: argsFilePath ? argsFilePath : `${process.cwd()}/CHANGELOG.md`,
+  };
+  log.debug('opt=', JSON.stringify(opt));
 
-const processGetCmd = (args: UnknownParsedArgs) => {
-  return getChangelog(cwd, args);
+  try {
+    if (args._.length) {
+      const cmd = args._[0];
+      return processCmd(cmd, args, opt);
+    } else {
+      return processFlags(args);
+    }
+  } catch (err: unknown) {
+    log.err(err);
+  }
 };
 
 const processFlags = (args: UnknownParsedArgs) => {

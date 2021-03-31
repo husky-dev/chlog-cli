@@ -6,8 +6,8 @@ export interface UnknownParsedArgs {
   _: string[];
 }
 
-export interface CLIOpts {
-  cwd: string;
+export interface CliOpts {
+  filePath: string;
 }
 
 export const getArgsStrParam = (args: UnknownParsedArgs, names: string[]): string | undefined => {

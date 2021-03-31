@@ -23,6 +23,7 @@ chlog add -v 1.3 "Some cool feature"
 #  -r, --removed
 #  -s, --security
 #  -l, --link
+#  -p - path to CHANGELOG.md file
 
 chlog change-version "Unreleased" "1.2.1"
 

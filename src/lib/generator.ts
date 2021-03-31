@@ -1,7 +1,7 @@
 import { Changelog, ChangelogGenOpt, ChangelogSection, ChangelogVersion } from './types';
 
 const defOpt: ChangelogGenOpt = {
-  sortRecords: false,
+  sortItems: false,
   sortSections: false,
   header: false,
 };
@@ -30,10 +30,10 @@ export const sectionsToStr = (sections: ChangelogSection[], opt: ChangelogGenOpt
 };
 
 const sortSectionByNameFn = (a: ChangelogSection, b: ChangelogSection): number => {
-  if (a === b) {
+  if (a.name === b.name) {
     return 0;
   } else {
-    return a < b ? 0 : 1;
+    return a.name > b.name ? 0 : 1;
   }
 };
 
@@ -46,7 +46,7 @@ const sectionToStr = (section: ChangelogSection, opt: ChangelogGenOpt = defOpt):
 const sectionToTitle = ({ name }: ChangelogSection) => `### ${name}`;
 
 const itemsToStr = (items: string[], opt: ChangelogGenOpt = defOpt): string => {
-  const lines = opt.sortRecords ? items.sort().map(itemToStr) : items.map(itemToStr);
+  const lines = opt.sortItems ? items.sort().map(itemToStr) : items.map(itemToStr);
   return lines.join('\n');
 };
 

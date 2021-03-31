@@ -22,3 +22,10 @@ export const mergeVersionsSections = (versions: ChangelogVersion[]): ChangelogSe
   const keys = Object.keys(obj).sort();
   return keys.map(key => ({ name: key, items: obj[key].sort() }));
 };
+
+export const addItemToSections = (sections: ChangelogSection[], name: string, item: string): ChangelogSection[] => {
+  const curSection = sections.find(itm => itm.name === name);
+  return curSection
+    ? sections.map(itm => (itm.name !== name ? itm : { ...itm, items: [...itm.items, item] }))
+    : [...sections, { name, items: [item] }];
+};
