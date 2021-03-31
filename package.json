@@ -20,6 +20,7 @@
   "files": [
     "README.md",
     "package.json",
+    "LICENSE",
     "dist"
   ],
   "scripts": {
