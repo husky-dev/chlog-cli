@@ -2,22 +2,26 @@
 import { processCmd } from 'lib';
 import minimist from 'minimist';
 
-import { CliOpts, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
+import { CliOpt, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
 
 const log = Log('cli', LogLevel.info);
 
 const help = `
+usage: chlog [<flags>] <command> [<args> ...]
+
 CLI tool for managing CHANGELOG.md file based on "Keep a Changelog" file format
 
-Usage:
-  chlog get -v "1.2"
+Global flags:
+  -h, --help     Print help
+  -p, --path     Path to the CHANGELOG.md file
+  -v, --version  Print version
+  --debug        Output verbose debugging information
 
--p, --path   Changelog file path
-
-Debug options:
-  -v, --version   Show chlog version
-  -h, --help      Show this help message and exit
-  --debug         Output verbose debugging information
+Commands:
+  get:      Get changelog
+  add:      Add record to the changelog
+  change:   Change version name or date
+  remove:   Remove version
 `;
 
 const processArgs = (args: UnknownParsedArgs) => {
@@ -25,7 +29,7 @@ const processArgs = (args: UnknownParsedArgs) => {
   log.setLevel(logLevel);
 
   const argsFilePath = getArgsStrParam(args, ['p', 'path']);
-  const opt: CliOpts = {
+  const opt: CliOpt = {
     filePath: argsFilePath ? argsFilePath : `${process.cwd()}/CHANGELOG.md`,
   };
   log.debug('opt=', JSON.stringify(opt));

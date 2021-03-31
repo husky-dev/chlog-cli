@@ -1,7 +1,7 @@
 {
   "name": "chlog-cli",
   "description": "CLI tool for managing CHANGELOG.md file based on \"Keep a Changelog\" file format",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "keywords": [
     "changelog",
     "cli"
@@ -20,6 +20,7 @@
   "files": [
     "README.md",
     "package.json",
+    "LICENSE",
     "dist"
   ],
   "scripts": {

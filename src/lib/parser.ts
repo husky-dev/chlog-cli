@@ -1,12 +1,12 @@
-import { Changelog, ChangelogSection, ChangelogVersion, ChangelogVersionInfo } from './types';
+import { Changelog, Section, Version, VersionData } from './types';
 
 export const strToChangelog = (val: string): Changelog => {
   const lines = val.split('\n');
-  const versions: ChangelogVersion[] = [];
+  const versions: Version[] = [];
 
   const headerLines: string[] = [];
   let curBody: string[] = [];
-  let curVersion: ChangelogVersionInfo | undefined = undefined;
+  let curVersion: VersionData | undefined = undefined;
 
   for (const line of lines) {
     const verInfo = strToVersion(line);
@@ -36,7 +36,7 @@ const clearHeaderStr = (rawStr: string): string => {
   return str;
 };
 
-export const strToVersion = (val: string): ChangelogVersionInfo | undefined => {
+export const strToVersion = (val: string): VersionData | undefined => {
   const withDateMatch = /^##\s*\[([\w.]+)\]\s*-\s*(.+)$/.exec(val);
   if (withDateMatch) {
     return { name: withDateMatch[1], date: withDateMatch[2].trim() };
@@ -48,8 +48,8 @@ export const strToVersion = (val: string): ChangelogVersionInfo | undefined => {
   return undefined;
 };
 
-const strLinesToSections = (val: string[]): ChangelogSection[] => {
-  const sections: ChangelogSection[] = [];
+const strLinesToSections = (val: string[]): Section[] => {
+  const sections: Section[] = [];
   let curName: string | undefined = undefined;
   let curItems: string[] = [];
   for (const rawLine of val) {

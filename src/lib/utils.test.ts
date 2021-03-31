@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { ChangelogVersion, Changelog } from './types';
+import { Version, Changelog } from './types';
 import { getSectionsWithVersion, mergeVersionsSections } from './utils';
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
@@ -43,14 +43,14 @@ describe('getSectionsWithVersion()', () => {
 
 describe('mergeVersionsSections()', () => {
   it('should return correct data', () => {
-    const c1: ChangelogVersion = {
+    const c1: Version = {
       name: 'v1',
       sections: [
         { name: 'Added', items: ['Added 001'] },
         { name: 'Fixed', items: ['Fixed 001'] },
       ],
     };
-    const c2: ChangelogVersion = {
+    const c2: Version = {
       name: 'v2',
       sections: [
         { name: 'Added', items: ['Added 002'] },
