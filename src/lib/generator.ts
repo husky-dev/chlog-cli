@@ -3,17 +3,22 @@ import { Changelog, ChangelogGenOpt, ChangelogSection, ChangelogVersion } from '
 const defOpt: ChangelogGenOpt = {
   sortRecords: true,
   sortSections: true,
+  header: true,
 };
 
 export const changelogToStr = (changelog: Changelog, opt: ChangelogGenOpt = defOpt): string => {
-  const { versions } = changelog;
+  const { header, versions } = changelog;
   const lines = versions.map(itm => versionToStr(itm, opt));
-  return `${lines.join('\n\n')}`;
+  const versionStrs = `${lines.join('\n\n')}`;
+  return opt.header && header ? `${header}\n\n${versionStrs}` : versionStrs;
 };
 
 const versionToStr = (version: ChangelogVersion, opt: ChangelogGenOpt = defOpt): string => {
   const lines: string[] = [versionToTitle(version)];
-  lines.push(sectionsToStr(version.sections, opt));
+  const sectionsStr = sectionsToStr(version.sections, opt);
+  if (sectionsStr) {
+    lines.push(sectionsStr);
+  }
   return lines.join('\n');
 };
 

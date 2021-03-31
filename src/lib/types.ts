@@ -18,7 +18,7 @@ export interface ChangelogSection {
 }
 
 export interface ChangelogGenOpt {
-  header?: string;
+  header?: boolean;
   sortSections?: boolean;
   sortRecords?: boolean;
 }

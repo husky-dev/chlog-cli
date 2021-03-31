@@ -1,5 +1,7 @@
 {
+  "header":"# Changelog\nAll notable changes to this project will be documented in this file.\n\nThe format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),\nand this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).",
   "versions": [
+    { "name": "Unreleased", "sections": []},
     { "name": "1.57.4", "date": "2021-02-11", "sections": [{ "name": "Fixed", "items": ["Chat fixes"] }] },
     {
       "name": "1.57.2",

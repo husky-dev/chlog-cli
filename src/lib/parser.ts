@@ -4,26 +4,36 @@ export const strToChangelog = (val: string): Changelog => {
   const lines = val.split('\n');
   const versions: ChangelogVersion[] = [];
 
+  const headerLines: string[] = [];
   let curBody: string[] = [];
   let curVersion: ChangelogVersionInfo | undefined = undefined;
 
   for (const line of lines) {
-    const verData = strToVersion(line);
-    if (verData) {
+    const verInfo = strToVersion(line);
+    if (verInfo) {
       if (curVersion) {
         versions.push({ ...curVersion, sections: strLinesToSections(curBody) });
       }
-      curVersion = verData;
+      curVersion = verInfo;
       curBody = [];
     } else {
       curBody.push(line);
+    }
+    if (!verInfo && !curVersion) {
+      headerLines.push(line);
     }
   }
   if (curVersion) {
     versions.push({ ...curVersion, sections: strLinesToSections(curBody) });
   }
+  const header = clearHeaderStr(headerLines.join('\n'));
+  return header ? { header, versions } : { versions };
+};
 
-  return { versions };
+const clearHeaderStr = (rawStr: string): string => {
+  let str: string = rawStr;
+  str = str.trim();
+  return str;
 };
 
 export const strToVersion = (val: string): ChangelogVersionInfo | undefined => {
