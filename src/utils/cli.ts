@@ -6,7 +6,7 @@ export interface UnknownParsedArgs {
   _: string[];
 }
 
-export interface CliOpts {
+export interface CliOpt {
   filePath: string;
 }
 

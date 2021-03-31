@@ -1,19 +1,19 @@
-import { Changelog, ChangelogGenOpt, ChangelogSection, ChangelogVersion } from './types';
+import { Changelog, GenOpt, Section, Version } from './types';
 
-const defOpt: ChangelogGenOpt = {
+const defOpt: GenOpt = {
   sortItems: false,
   sortSections: false,
   header: false,
 };
 
-export const changelogToStr = (changelog: Changelog, opt: ChangelogGenOpt = defOpt): string => {
+export const changelogToStr = (changelog: Changelog, opt: GenOpt = defOpt): string => {
   const { header, versions } = changelog;
   const lines = versions.map(itm => versionToStr(itm, opt));
   const versionStrs = `${lines.join('\n\n')}`;
   return opt.header && header ? `${header}\n\n${versionStrs}` : versionStrs;
 };
 
-const versionToStr = (version: ChangelogVersion, opt: ChangelogGenOpt = defOpt): string => {
+const versionToStr = (version: Version, opt: GenOpt = defOpt): string => {
   const lines: string[] = [versionToTitle(version)];
   const sectionsStr = sectionsToStr(version.sections, opt);
   if (sectionsStr) {
@@ -22,14 +22,14 @@ const versionToStr = (version: ChangelogVersion, opt: ChangelogGenOpt = defOpt):
   return lines.join('\n');
 };
 
-const versionToTitle = ({ name, date }: ChangelogVersion) => (date ? `## [${name}] - ${date}` : `## [${name}]`);
+const versionToTitle = ({ name, date }: Version) => (date ? `## [${name}] - ${date}` : `## [${name}]`);
 
-export const sectionsToStr = (sections: ChangelogSection[], opt: ChangelogGenOpt = defOpt): string => {
+export const sectionsToStr = (sections: Section[], opt: GenOpt = defOpt): string => {
   const items = opt.sortSections ? sections.sort(sortSectionByNameFn) : sections;
   return items.map(itm => sectionToStr(itm, opt)).join('\n\n');
 };
 
-const sortSectionByNameFn = (a: ChangelogSection, b: ChangelogSection): number => {
+const sortSectionByNameFn = (a: Section, b: Section): number => {
   if (a.name === b.name) {
     return 0;
   } else {
@@ -37,15 +37,15 @@ const sortSectionByNameFn = (a: ChangelogSection, b: ChangelogSection): number =
   }
 };
 
-const sectionToStr = (section: ChangelogSection, opt: ChangelogGenOpt = defOpt): string => {
+const sectionToStr = (section: Section, opt: GenOpt = defOpt): string => {
   const title = sectionToTitle(section);
   const items = itemsToStr(section.items, opt);
   return `${title}\n${items}`;
 };
 
-const sectionToTitle = ({ name }: ChangelogSection) => `### ${name}`;
+const sectionToTitle = ({ name }: Section) => `### ${name}`;
 
-const itemsToStr = (items: string[], opt: ChangelogGenOpt = defOpt): string => {
+const itemsToStr = (items: string[], opt: GenOpt = defOpt): string => {
   const lines = opt.sortItems ? items.sort().map(itemToStr) : items.map(itemToStr);
   return lines.join('\n');
 };

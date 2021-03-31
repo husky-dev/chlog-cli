@@ -2,7 +2,7 @@
 import { processCmd } from 'lib';
 import minimist from 'minimist';
 
-import { CliOpts, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
+import { CliOpt, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
 
 const log = Log('cli', LogLevel.info);
 
@@ -25,7 +25,7 @@ const processArgs = (args: UnknownParsedArgs) => {
   log.setLevel(logLevel);
 
   const argsFilePath = getArgsStrParam(args, ['p', 'path']);
-  const opt: CliOpts = {
+  const opt: CliOpt = {
     filePath: argsFilePath ? argsFilePath : `${process.cwd()}/CHANGELOG.md`,
   };
   log.debug('opt=', JSON.stringify(opt));
