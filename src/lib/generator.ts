@@ -1,9 +1,9 @@
 import { Changelog, ChangelogGenOpt, ChangelogSection, ChangelogVersion } from './types';
 
 const defOpt: ChangelogGenOpt = {
-  sortRecords: true,
-  sortSections: true,
-  header: true,
+  sortRecords: false,
+  sortSections: false,
+  header: false,
 };
 
 export const changelogToStr = (changelog: Changelog, opt: ChangelogGenOpt = defOpt): string => {

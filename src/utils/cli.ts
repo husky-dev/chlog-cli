@@ -12,3 +12,13 @@ export interface CLIOpts {
   cwd: string;
   logLevel: LogLevel;
 }
+
+export const getArgsStrParam = (args: UnknownParsedArgs, names: string[]): string | undefined => {
+  for (const name of names) {
+    const val: unknown = args[name];
+    if (typeof val === 'string' || typeof val === 'number') {
+      return `${val}`;
+    }
+  }
+  return undefined;
+};

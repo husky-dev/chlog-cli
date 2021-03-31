@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 /* eslint-disable no-console */
-import { getChangelog } from 'lib';
+import { getChangelog } from './lib';
 import minimist from 'minimist';
 
 import { CLIOpts, Log, LogLevel, UnknownParsedArgs } from './utils';

@@ -7,9 +7,9 @@ const mockPath = resolve(__dirname, '../mock');
 
 describe('changelogToStr()', () => {
   it('should generate', () => {
-    const str = readFileSync(`${mockPath}/changelog_001.md`, 'utf-8');
+    const str = readFileSync(`${mockPath}/changelog-001.md`, 'utf-8').trim();
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const data: Changelog = JSON.parse(readFileSync(`${mockPath}/changelog_001.json`, 'utf-8')) as Changelog;
+    const data: Changelog = JSON.parse(readFileSync(`${mockPath}/changelog-001.json`, 'utf-8')) as Changelog;
     expect(changelogToStr(data, { sortSections: false, sortRecords: false, header: true })).toBe(str);
   });
 });

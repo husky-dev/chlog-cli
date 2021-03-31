@@ -5,7 +5,8 @@
   "author": "Jaroslav Khorishchenko <websnipter@gmail.com>",
   "license": "MIT",
   "bin": {
-    "chlog": "./dist/index.js"
+    "chlog": "./dist/index.js",
+    "chlog-cli": "./dist/index.js"
   },
   "scripts": {
     "start": "ts-node ./src/index",
