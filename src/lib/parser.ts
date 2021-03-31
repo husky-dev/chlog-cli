@@ -1,11 +1,11 @@
-import { Changelog, ChangelogSection, ChangelogVersion } from './types';
+import { Changelog, ChangelogSection, ChangelogVersion, ChangelogVersionInfo } from './types';
 
 export const strToChangelog = (val: string): Changelog => {
   const lines = val.split('\n');
   const versions: ChangelogVersion[] = [];
 
   let curBody: string[] = [];
-  let curVersion: ChangelogVersion | undefined = undefined;
+  let curVersion: ChangelogVersionInfo | undefined = undefined;
 
   for (const line of lines) {
     const verData = strToVersion(line);
@@ -26,9 +26,16 @@ export const strToChangelog = (val: string): Changelog => {
   return { versions };
 };
 
-const strToVersion = (val: string): ChangelogVersion | undefined => {
-  const match = /^##\s*\[([\d.]+)\]\s*-\s*(.+)$/.exec(val);
-  return match ? { name: match[1], date: match[2].trim(), sections: [] } : undefined;
+export const strToVersion = (val: string): ChangelogVersionInfo | undefined => {
+  const withDateMatch = /^##\s*\[([\w.]+)\]\s*-\s*(.+)$/.exec(val);
+  if (withDateMatch) {
+    return { name: withDateMatch[1], date: withDateMatch[2].trim() };
+  }
+  const withoutDateMatch = /^##\s*\[([\w.]+)\]\s*$/.exec(val);
+  if (withoutDateMatch) {
+    return { name: withoutDateMatch[1] };
+  }
+  return undefined;
 };
 
 const strLinesToSections = (val: string[]): ChangelogSection[] => {

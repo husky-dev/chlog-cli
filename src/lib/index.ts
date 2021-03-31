@@ -24,15 +24,15 @@ export const processChangelogCmd = (command: string[], args: ParsedArgs, { cwd, 
   }
 };
 
-const getChangelog = (cwd: string, args: ParsedArgs) => {
+export const getChangelog = (cwd: string, args: ParsedArgs) => {
   const str = getChangelogStr(cwd);
   const changelog = strToChangelog(str);
   const verParam = getArgsStrParam(args, ['version', 'v']);
   if (verParam) {
     const sections = getChangelogSectionsWithVersonNamePattern(changelog, `${verParam}`);
-    return log.simple(sectionsToStr(sections));
+    return log.simpleAndExit(sectionsToStr(sections));
   }
-  return log.simple(changelogToStr(changelog));
+  return log.simpleAndExit(changelogToStr(changelog));
 };
 
 const getArgsStrParam = (args: ParsedArgs, names: string[]): string | undefined => {

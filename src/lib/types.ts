@@ -1,14 +1,24 @@
 export interface Changelog {
+  header?: string;
   versions: ChangelogVersion[];
 }
 
-export interface ChangelogVersion {
+export interface ChangelogVersionInfo {
   name: string;
-  date: string;
+  date?: string;
+}
+
+export interface ChangelogVersion extends ChangelogVersionInfo {
   sections: ChangelogSection[];
 }
 
 export interface ChangelogSection {
   name: string;
   items: string[];
+}
+
+export interface ChangelogGenOpt {
+  header?: string;
+  sortSections?: boolean;
+  sortRecords?: boolean;
 }

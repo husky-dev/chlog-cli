@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { isUnknownDict } from 'utils';
 
-import { strToChangelog, strToSectionName } from './parser';
+import { strToChangelog, strToSectionName, strToVersion } from './parser';
 
 const mockPath = resolve(__dirname, '../mock');
 
@@ -21,5 +21,14 @@ describe('strToSectionName()', () => {
     expect(strToSectionName('### Fixed')).toBe('Fixed');
     expect(strToSectionName('###Fixed')).toBe('Fixed');
     expect(strToSectionName('## Fixed')).toBe(undefined);
+  });
+});
+
+describe('strToVersion()', () => {
+  it('should parse', () => {
+    expect(strToVersion('## [1.57.4] - 2021-02-11')).toMatchObject({ name: '1.57.4', date: '2021-02-11' });
+    expect(strToVersion('## [1.57.4]')).toMatchObject({ name: '1.57.4' });
+    expect(strToVersion('##[1.57.4]')).toMatchObject({ name: '1.57.4' });
+    expect(strToVersion('## [Unreleased]')).toMatchObject({ name: 'Unreleased' });
   });
 });

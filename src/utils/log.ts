@@ -24,6 +24,10 @@ export const Log = (m: string, defLevel: LogLevel = LogLevel.trace) => {
       process.exit(1);
     },
     simple: (...args: unknown[]) => console.log(...args),
+    simpleAndExit: (...args: unknown[]) => {
+      console.log(...args);
+      process.exit(0);
+    },
     setLevel,
   };
 };
