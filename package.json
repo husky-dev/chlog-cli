@@ -1,8 +1,11 @@
 {
   "name": "chlog-cli",
   "description": "CLI tool for managing CHANGELOG.md file based on \"Keep a Changelog\" file format",
-  "version": "1.0.0",
-  "keywords": ["changelog", "cli"],
+  "version": "1.0.1",
+  "keywords": [
+    "changelog",
+    "cli"
+  ],
   "author": "Jaroslav Khorishchenko <jaro@smartapp.dev>",
   "repository": {
     "type": "git",
