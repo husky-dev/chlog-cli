@@ -1,7 +1,6 @@
 import { existsSync, readFileSync } from 'fs';
+import { getArgsStrParam, Log, UnknownParsedArgs } from 'utils';
 
-import { getArgsStrParam, UnknownParsedArgs } from '../utils/cli';
-import { Log } from '../utils/log';
 import { changelogToStr, sectionsToStr } from './generator';
 import { strToChangelog } from './parser';
 import { getSectionsWithVersion } from './utils';

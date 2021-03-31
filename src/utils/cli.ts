@@ -1,5 +1,3 @@
-import { LogLevel } from './log';
-
 export interface UnknownParsedArgs {
   [arg: string]: unknown;
   /** If opts['--'] is true, populated with everything after the -- */
@@ -10,7 +8,6 @@ export interface UnknownParsedArgs {
 
 export interface CLIOpts {
   cwd: string;
-  logLevel: LogLevel;
 }
 
 export const getArgsStrParam = (args: UnknownParsedArgs, names: string[]): string | undefined => {
@@ -18,6 +15,16 @@ export const getArgsStrParam = (args: UnknownParsedArgs, names: string[]): strin
     const val: unknown = args[name];
     if (typeof val === 'string' || typeof val === 'number') {
       return `${val}`;
+    }
+  }
+  return undefined;
+};
+
+export const getArgsBoolParam = (args: UnknownParsedArgs, names: string[]): boolean | undefined => {
+  for (const name of names) {
+    const val: unknown = args[name];
+    if (typeof val === 'boolean') {
+      return val;
     }
   }
   return undefined;

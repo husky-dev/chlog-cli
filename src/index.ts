@@ -1,9 +1,8 @@
-#! /usr/bin/env node
 /* eslint-disable no-console */
-import { getChangelog } from './lib';
+import { getChangelog } from 'lib';
 import minimist from 'minimist';
 
-import { CLIOpts, Log, LogLevel, UnknownParsedArgs } from './utils';
+import { getArgsBoolParam, Log, LogLevel, UnknownParsedArgs } from './utils';
 
 const log = Log('cli', LogLevel.info);
 const cwd = process.cwd();
@@ -24,26 +23,34 @@ const processArgs = (args: UnknownParsedArgs) => {
   // Check for verbose mode
   const logLevel = args.debug === true ? LogLevel.trace : LogLevel.none;
   log.setLevel(logLevel);
-  // Current path
   log.debug('cwd=', cwd);
-  // Help
-  if (args.h === true || args.help === true) {
-    log.simpleAndExit(help);
-  }
-  // Parsing commands
   if (args._.length) {
     const cmd = args._[0];
-    if (cmd === 'get') {
-      return processGetCmd(args, { cwd, logLevel });
-    }
-    return log.errAndExit(`Unknown command "${cmd}"`);
+    return processCmd(cmd, args);
   } else {
-    return log.errAndExit('Command required');
+    return processFlags(args);
   }
 };
 
-const processGetCmd = (args: UnknownParsedArgs, opts: CLIOpts) => {
-  return getChangelog(opts.cwd, args);
+const processCmd = (cmd: string, args: UnknownParsedArgs) => {
+  if (cmd === 'get') {
+    return processGetCmd(args);
+  }
+  return log.errAndExit(`Unknown command ${cmd}`);
+};
+
+const processGetCmd = (args: UnknownParsedArgs) => {
+  return getChangelog(cwd, args);
+};
+
+const processFlags = (args: UnknownParsedArgs) => {
+  if (getArgsBoolParam(args, ['v', 'version'])) {
+    return log.simpleAndExit(VERSION);
+  }
+  if (getArgsBoolParam(args, ['h', 'help'])) {
+    return log.simpleAndExit(help);
+  }
+  return log.errAndExit('Command required');
 };
 
 processArgs(minimist(process.argv.slice(2)));
