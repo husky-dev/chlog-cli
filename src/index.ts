@@ -1,10 +1,9 @@
 /* eslint-disable no-console */
 import { processCmd } from 'lib';
 import minimist from 'minimist';
+import { errToStr } from 'utils/str';
 
-import { CliOpt, getArgsBoolParam, getArgsStrParam, Log, LogLevel, UnknownParsedArgs } from './utils';
-
-const log = Log('cli', LogLevel.info);
+import { CliOpt, getArgsBoolParam, getArgsStrParam, log, LogLevel, UnknownParsedArgs } from './utils';
 
 const help = `
 usage: chlog [<flags>] <command> [<args> ...]
@@ -42,7 +41,7 @@ const processArgs = (args: UnknownParsedArgs) => {
       return processFlags(args);
     }
   } catch (err: unknown) {
-    log.errAndExit(err);
+    log.errAndExit(errToStr(err));
   }
 };
 
@@ -53,7 +52,7 @@ const processFlags = (args: UnknownParsedArgs) => {
   if (getArgsBoolParam(args, ['h', 'help'])) {
     return log.simpleAndExit(help);
   }
-  return log.errAndExit('Command required');
+  throw new Error('Command required');
 };
 
 processArgs(minimist(process.argv.slice(2)));

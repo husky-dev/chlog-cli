@@ -8,26 +8,22 @@ export enum LogLevel {
   trace = 4,
 }
 
-export const Log = (m: string, defLevel: LogLevel = LogLevel.trace) => {
-  let level: LogLevel = defLevel;
+let level: LogLevel = LogLevel.trace;
 
-  const setLevel = (val: LogLevel) => (level = val);
-
-  return {
-    err: (...args: unknown[]) => (level >= LogLevel.err ? console.log(`[x][${m}]:`, ...args) : undefined),
-    warn: (...args: unknown[]) => (level >= LogLevel.warn ? console.log(`[!][${m}]:`, ...args) : undefined),
-    info: (...args: unknown[]) => (level >= LogLevel.info ? console.log(`[+][${m}]:`, ...args) : undefined),
-    debug: (...args: unknown[]) => (level >= LogLevel.debug ? console.log(`[-][${m}]:`, ...args) : undefined),
-    trace: (...args: unknown[]) => (level >= LogLevel.trace ? console.log(`[*][${m}]:`, ...args) : undefined),
-    errAndExit: (...args: unknown[]) => {
-      console.log(`[x][${m}]:`, ...args);
-      process.exit(1);
-    },
-    simple: (...args: unknown[]) => console.log(...args),
-    simpleAndExit: (...args: unknown[]) => {
-      console.log(...args);
-      process.exit(0);
-    },
-    setLevel,
-  };
+export const log = {
+  err: (...args: unknown[]) => (level >= LogLevel.err ? console.log(`[x]:`, ...args) : undefined),
+  warn: (...args: unknown[]) => (level >= LogLevel.warn ? console.log(`[!]:`, ...args) : undefined),
+  info: (...args: unknown[]) => (level >= LogLevel.info ? console.log(`[+]:`, ...args) : undefined),
+  debug: (...args: unknown[]) => (level >= LogLevel.debug ? console.log(`[-]:`, ...args) : undefined),
+  trace: (...args: unknown[]) => (level >= LogLevel.trace ? console.log(`[*]:`, ...args) : undefined),
+  errAndExit: (...args: unknown[]) => {
+    console.log(`[x]:`, ...args);
+    process.exit(1);
+  },
+  simple: (...args: unknown[]) => console.log(...args),
+  simpleAndExit: (...args: unknown[]) => {
+    console.log(...args);
+    process.exit(0);
+  },
+  setLevel: (val: LogLevel) => (level = val),
 };

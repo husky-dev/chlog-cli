@@ -1,12 +1,10 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { CliOpt, getArgsStrParam, Log, UnknownParsedArgs } from 'utils';
+import { CliOpt, getArgsVersionParam, getArgsVersionParamOrErr, log, UnknownParsedArgs } from 'utils';
 
 import { changelogToStr, sectionsToStr } from './generator';
 import { strToChangelog } from './parser';
 import { Changelog } from './types';
 import { argsToNewSectionItem, getSectionsWithVersion, mergeSections } from './utils';
-
-const log = Log('changelog');
 
 const defVersionParam = 'Unreleased';
 
@@ -20,12 +18,12 @@ export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) =>
   if (cmd === 'remove') {
     return processRemoveCmd(args, opt);
   }
-  return log.errAndExit(`Unknown command ${cmd}`);
+  throw new Error(`Unknown command "${cmd}"`);
 };
 
 const processGetCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsStrParam(args, ['version', 'v']);
+  const verParam = getArgsVersionParam(args);
   if (verParam) {
     const sections = getSectionsWithVersion(changelog, `${verParam}`);
     return log.simpleAndExit(sectionsToStr(sections));
@@ -35,7 +33,7 @@ const processGetCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
 
 const processAddCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsStrParam(args, ['version', 'v']) || defVersionParam;
+  const verParam = getArgsVersionParam(args) || defVersionParam;
 
   const curVer = changelog.versions.find(itm => itm.name === verParam);
   if (!curVer) {
@@ -54,11 +52,7 @@ const processAddCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
 const processRemoveCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const changelog = readChangelogFromFile(opt);
 
-  const verParam = getArgsStrParam(args, ['version', 'v']);
-
-  if (!verParam) {
-    throw new Error(`Version param required`);
-  }
+  const verParam = getArgsVersionParamOrErr(args);
 
   const curVer = changelog.versions.find(itm => itm.name === verParam);
   if (!curVer) {

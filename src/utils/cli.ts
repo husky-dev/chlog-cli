@@ -29,3 +29,13 @@ export const getArgsBoolParam = (args: UnknownParsedArgs, names: string[]): bool
   }
   return undefined;
 };
+
+export const getArgsVersionParam = (args: UnknownParsedArgs): string | undefined => getArgsStrParam(args, ['version', 'v']);
+
+export const getArgsVersionParamOrErr = (args: UnknownParsedArgs): string => {
+  const v = getArgsVersionParam(args);
+  if (!v) {
+    throw new Error('Version param required');
+  }
+  return v;
+};
