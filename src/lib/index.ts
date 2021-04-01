@@ -17,6 +17,9 @@ export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) =>
   if (cmd === 'add') {
     return processAddCmd(args, opt);
   }
+  if (cmd === 'remove') {
+    return processRemoveCmd(args, opt);
+  }
   return log.errAndExit(`Unknown command ${cmd}`);
 };
 
@@ -44,6 +47,25 @@ const processAddCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const versions = changelog.versions.map(version =>
     version.name !== verParam ? version : { ...version, sections: mergeSections([...version.sections, newSection]) },
   );
+
+  writeChangelogToFile(opt, { ...changelog, versions });
+};
+
+const processRemoveCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
+  const changelog = readChangelogFromFile(opt);
+
+  const verParam = getArgsStrParam(args, ['version', 'v']);
+
+  if (!verParam) {
+    throw new Error(`Version param required`);
+  }
+
+  const curVer = changelog.versions.find(itm => itm.name === verParam);
+  if (!curVer) {
+    throw new Error(`Version ${verParam} not found`);
+  }
+
+  const versions = changelog.versions.filter(itm => itm.name !== verParam);
 
   writeChangelogToFile(opt, { ...changelog, versions });
 };
