@@ -7,6 +7,11 @@ import { Changelog, Section, SectionType, Version } from './types';
 
 const sectionTypeArr: SectionType[] = ['added', 'changed', 'deprecated', 'removed', 'fixed', 'security'];
 
+/**
+ * Converts section type to it's name
+ * @param val - section type
+ * @returns section name
+ */
 const sectionTypeToName = (val: SectionType): string => {
   switch (val) {
     case 'added':
@@ -24,6 +29,11 @@ const sectionTypeToName = (val: SectionType): string => {
   }
 };
 
+/**
+ * Converts section type to the names of incoming args params
+ * @param val - section type
+ * @returns incoming args array
+ */
 const sectionTypeToArgParams = (val: SectionType): string[] => {
   switch (val) {
     case 'added':
@@ -41,6 +51,12 @@ const sectionTypeToArgParams = (val: SectionType): string[] => {
   }
 };
 
+/**
+ * Returns merged scections of the specific version
+ * @param changelog - changelog data
+ * @param versionName - name of the version or it's part (e.g. `1.52.1`, `1.52`)
+ * @returns merged sections
+ */
 export const getSectionsWithVersion = (changelog: Changelog, versionName: string): Section[] => {
   const filtVersions = changelog.versions.filter(itm => itm.name.indexOf(versionName) === 0);
   if (!filtVersions.length) {
@@ -50,18 +66,11 @@ export const getSectionsWithVersion = (changelog: Changelog, versionName: string
 };
 
 export const mergeVersionsSections = (versions: Version[]): Section[] => {
-  const obj: Record<string, string[]> = {};
+  const sections: Section[] = [];
   for (const version of versions) {
-    for (const section of version.sections) {
-      if (typeof obj[section.name] !== 'undefined') {
-        obj[section.name].push(...section.items);
-      } else {
-        obj[section.name] = section.items;
-      }
-    }
+    sections.push(...version.sections);
   }
-  const keys = Object.keys(obj).sort();
-  return keys.map(key => ({ name: key, items: obj[key].sort() }));
+  return mergeSections(sections);
 };
 
 export const mergeSections = (sections: Section[]): Section[] => {
@@ -77,6 +86,17 @@ export const mergeSections = (sections: Section[]): Section[] => {
   return keys.map(key => ({ name: key, items: obj[key].sort() }));
 };
 
+/**
+ * Converts invoming command line arguments to a new section
+ * `-f`, `--fixed`
+ * `-a`, `--added`
+ * `-c`, `--changed`
+ * `-d`, `--deprecated`
+ * `-r`, `--removed`
+ * `-s`, `--security`
+ * @param args - incoming arguments
+ * @returns new section
+ */
 export const argsToNewSectionItem = (args: UnknownParsedArgs): Section => {
   for (const sectionType of sectionTypeArr) {
     const strParam = getArgsStrParam(args, sectionTypeToArgParams(sectionType));

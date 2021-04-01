@@ -42,7 +42,7 @@ const processArgs = (args: UnknownParsedArgs) => {
       return processFlags(args);
     }
   } catch (err: unknown) {
-    log.err(err);
+    log.errAndExit(err);
   }
 };
 

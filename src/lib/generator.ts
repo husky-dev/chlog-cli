@@ -1,4 +1,10 @@
-import { Changelog, GenOpt, Section, Version } from './types';
+import { Changelog, Section, Version } from './types';
+
+export interface GenOpt {
+  header?: boolean;
+  sortSections?: boolean;
+  sortItems?: boolean;
+}
 
 const defOpt: GenOpt = {
   sortItems: false,
@@ -10,7 +16,7 @@ export const changelogToStr = (changelog: Changelog, opt: GenOpt = defOpt): stri
   const { header, versions } = changelog;
   const lines = versions.map(itm => versionToStr(itm, opt));
   const versionStrs = `${lines.join('\n\n')}`;
-  return opt.header && header ? `${header}\n\n${versionStrs}` : versionStrs;
+  return opt.header && header ? `${header}\n\n${versionStrs}\n` : `${versionStrs}\n`;
 };
 
 const versionToStr = (version: Version, opt: GenOpt = defOpt): string => {

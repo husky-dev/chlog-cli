@@ -18,9 +18,3 @@ export interface Section {
 }
 
 export type SectionType = 'added' | 'changed' | 'deprecated' | 'removed' | 'fixed' | 'security';
-
-export interface GenOpt {
-  header?: boolean;
-  sortSections?: boolean;
-  sortItems?: boolean;
-}
