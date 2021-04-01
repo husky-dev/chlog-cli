@@ -1,6 +1,7 @@
 # Changelog CLI
 
 ![npm version](https://img.shields.io/npm/v/chlog-cli)
+![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 ![Lint](https://github.com/husky-dev/chlog-cli/workflows/Lint/badge.svg)
 ![Test](https://github.com/husky-dev/chlog-cli/workflows/Test/badge.svg)
 
