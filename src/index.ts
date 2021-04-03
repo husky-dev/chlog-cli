@@ -1,5 +1,5 @@
 import program from 'commander';
-import { addCmd, getCmd, initCmd } from 'lib';
+import { addCmd, changeCmd, getCmd, initCmd, removeCmd } from 'lib';
 import { resolve } from 'path';
 import { log, LogLevel } from 'utils';
 
@@ -10,7 +10,7 @@ program
   )
   .version(VERSION || '0.0.0', '-v, --version', 'output the current version')
   .option('-p, --path', 'path to the changelog file', 'CHANGELOG.md')
-  .option('-d, --debug', 'output extra debugging');
+  .option('--debug', 'output extra debugging');
 
 program.on('debug', () => log.setLevel(LogLevel.trace));
 
@@ -52,45 +52,16 @@ program
 
 program
   .command('change <version>')
+  .alias('ch')
   .description('change version name or date')
-  .option('-n, --name', 'new name')
-  .option('-d, --date', 'new date')
-  .action(() => {
-    // console.log(args[0]);
-  });
+  .option('-n, --name <name>', 'new name')
+  .option('-d, --date <date>', 'new date')
+  .action((version: string, opts: { name: unknown; date: unknown }) => changeCmd(getFilePath(), version, opts));
 
 program
   .command('remove <version>')
+  .alias('rm')
   .description('remove version')
-  .action(() => {
-    // console.log(args[0]);
-  });
+  .action((version: string) => removeCmd(getFilePath(), version));
 
 program.parse(process.argv);
-
-// const opts = program.opts();
-
-// const logLevel = opts.debug === true ? LogLevel.trace : LogLevel.none;
-// log.setLevel(logLevel);
-
-// const processArgs = (args: UnknownParsedArgs) => {
-//   const logLevel = getArgsBoolParam(args, ['debug']) ? LogLevel.trace : LogLevel.none;
-//   log.setLevel(logLevel);
-
-//   const argsFilePath = getArgsStrParam(args, ['p', 'path']);
-//   const opt: CliOpt = {
-//     filePath: argsFilePath ? argsFilePath : `${process.cwd()}/CHANGELOG.md`,
-//   };
-//   log.debug('opt=', JSON.stringify(opt));
-
-//   try {
-//     if (args._.length) {
-//       const cmd = args._[0];
-//       return processCmd(cmd, args, opt);
-//     } else {
-//       return processFlags(args);
-//     }
-//   } catch (err: unknown) {
-//     log.errAndExit(errToStr(err));
-//   }
-// };

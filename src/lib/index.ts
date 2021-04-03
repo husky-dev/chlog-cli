@@ -1,10 +1,11 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { log } from 'utils';
+import { isStr, log } from 'utils';
+import { dateToFormatedStr } from 'utils/date';
 
 import { changelogToStr, sectionsToStr } from './generator';
 import { strToChangelog } from './parser';
-import { Changelog, Section, SectionType } from './types';
+import { Changelog, Section, SectionType, Version } from './types';
 import { defChangelogTemplate, getSectionsWithVersion, mergeSections, sectionTypeToName } from './utils';
 
 export const initCmd = (curFilePath: string, fileName: string | undefined) => {
@@ -38,7 +39,7 @@ export const addCmd = (
 
   const sectionType = optsToSectionType(opts);
   if (!sectionType) {
-    return log.errAndExit('record type should be provided');
+    return log.errAndExit('a record type should be provided');
   }
 
   const finalText = !link ? text : `[${text}](${link})`;
@@ -62,60 +63,55 @@ const optsToSectionType = (opts: Record<string, unknown>): SectionType | undefin
   return undefined;
 };
 
-/*
+export const changeCmd = (curFilePath: string, version: string, opts: { name: unknown; date: unknown }) => {
+  const changelog = readChangelogFromFile(curFilePath);
+  const { name, date } = opts;
 
-const processChangeCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
-  const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsVersionParamOrErr(args);
-  const newNameParam = getArgsStrParam(args, ['name', 'n']);
-  const newDateParam = getArgsStrParam(args, ['date', 'd']);
-
-  if (!newNameParam && !newDateParam) {
-    throw new Error('Name or date param required');
+  if (!isStr(name) && !isStr(date)) {
+    return log.errAndExit(`Name or date param required`);
   }
 
-  const curVer = changelog.versions.find(itm => itm.name === verParam);
+  const curVer = changelog.versions.find(itm => itm.name === version);
   if (!curVer) {
-    throw new Error(`Version "${verParam}" not found`);
+    return log.errAndExit(`version "${version}" not found`);
   }
 
-  const versions = changelog.versions.map(version => {
-    if (version.name !== verParam) {
-      return version;
+  const versions = changelog.versions.map(itm => {
+    if (itm.name !== version) {
+      return itm;
     }
-    let newVersion: Version = version;
-    if (newNameParam) {
-      newVersion = { ...newVersion, name: newNameParam };
+    let newVersion: Version = itm;
+    if (name && isStr(name)) {
+      newVersion = { ...newVersion, name };
     }
-    if (newDateParam) {
-      if (['current', 'cur'].includes(newDateParam)) {
+    if (date && isStr(date)) {
+      if (['current', 'cur'].includes(date)) {
         newVersion = { ...newVersion, date: dateToFormatedStr(new Date()) };
       } else {
-        newVersion = { ...newVersion, date: newDateParam };
+        newVersion = { ...newVersion, date };
       }
     }
     return newVersion;
   });
 
-  writeChangelogToFile(opt, { ...changelog, versions });
+  writeChangelogToFile(curFilePath, { ...changelog, versions });
 };
 
-const processRemoveCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
-  const changelog = readChangelogFromFile(opt);
+export const removeCmd = (curFilePath: string, version: string) => {
+  const changelog = readChangelogFromFile(curFilePath);
 
-  const verParam = getArgsVersionParamOrErr(args);
-
-  const curVer = changelog.versions.find(itm => itm.name === verParam);
+  const curVer = changelog.versions.find(itm => itm.name === version);
   if (!curVer) {
-    throw new Error(`Version ${verParam} not found`);
+    throw new Error(`version ${version} not found`);
   }
 
-  const versions = changelog.versions.filter(itm => itm.name !== verParam);
+  const versions = changelog.versions.filter(itm => itm.name !== version);
 
-  writeChangelogToFile(opt, { ...changelog, versions });
+  writeChangelogToFile(curFilePath, { ...changelog, versions });
+  log.info(`verions "${version}" has been removed`);
 };
 
-*/
+// File
 
 const readChangelogFromFile = (filePath: string) => {
   if (!existsSync(filePath)) {
