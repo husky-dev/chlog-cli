@@ -1,21 +1,20 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
-import { CliOpt, log } from 'utils';
+import { log } from 'utils';
 
 import { changelogToStr, sectionsToStr } from './generator';
 import { strToChangelog } from './parser';
-import { Changelog } from './types';
-import { defChangelogTemplate, getSectionsWithVersion } from './utils';
+import { Changelog, Section, SectionType } from './types';
+import { defChangelogTemplate, getSectionsWithVersion, mergeSections, sectionTypeToName } from './utils';
 
-export const initCmd = (fileName: string | undefined) => {
-  const filePath = resolve(process.cwd(), fileName || 'CHANGELOG.md');
+export const initCmd = (curFilePath: string, fileName: string | undefined) => {
+  const filePath = fileName ? resolve(process.cwd(), fileName) : curFilePath;
   log.info(`creating a new changelog at "${filePath}"`);
   writeFileSync(filePath, defChangelogTemplate);
 };
 
-export const getCmd = (version: string | undefined) => {
-  const filePath = resolve(process.cwd(), 'CHANGELOG.md');
-  const changelog = readChangelogFromFile(filePath);
+export const getCmd = (curFilePath: string, version: string | undefined) => {
+  const changelog = readChangelogFromFile(curFilePath);
   if (version) {
     const sections = getSectionsWithVersion(changelog, version);
     return log.simpleAndExit(sectionsToStr(sections));
@@ -23,51 +22,47 @@ export const getCmd = (version: string | undefined) => {
   return log.simpleAndExit(changelogToStr(changelog, { header: false }));
 };
 
-/*
+export const addCmd = (
+  curFilePath: string,
+  version: string,
+  text: string,
+  link: string | undefined,
+  opts: Record<string, unknown>,
+) => {
+  const changelog = readChangelogFromFile(curFilePath);
 
-export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) => {
-  if (cmd === 'get') {
-    return processGetCmd(args, opt);
-  }
-  if (cmd === 'add') {
-    return processAddCmd(args, opt);
-  }
-  if (cmd === 'change') {
-    return processChangeCmd(args, opt);
-  }
-  if (cmd === 'remove') {
-    return processRemoveCmd(args, opt);
-  }
-  throw new Error(`Unknown command "${cmd}"`);
-};
-
-const processGetCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
-  const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsVersionParam(args);
-  if (verParam) {
-    const sections = getSectionsWithVersion(changelog, `${verParam}`);
-    return log.simpleAndExit(sectionsToStr(sections));
-  }
-  return log.simpleAndExit(changelogToStr(changelog, { header: false }));
-};
-
-const processAddCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
-  const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsVersionParam(args) || defUnreleasedVersionName;
-
-  const curVer = changelog.versions.find(itm => itm.name === verParam);
+  const curVer = changelog.versions.find(itm => itm.name === version);
   if (!curVer) {
-    changelog.versions.unshift({ name: verParam, sections: [] });
+    changelog.versions.unshift({ name: version, sections: [] });
   }
 
-  const newSection = argsToNewSectionItem(args);
+  const sectionType = optsToSectionType(opts);
+  if (!sectionType) {
+    return log.errAndExit('record type should be provided');
+  }
 
-  const versions = changelog.versions.map(version =>
-    version.name !== verParam ? version : { ...version, sections: mergeSections([...version.sections, newSection]) },
+  const finalText = !link ? text : `[${text}](${link})`;
+  const newSection: Section = { name: sectionTypeToName(sectionType), items: [finalText] };
+
+  const versions = changelog.versions.map(itm =>
+    itm.name !== version ? itm : { ...itm, sections: mergeSections([...itm.sections, newSection]) },
   );
 
-  writeChangelogToFile(opt, { ...changelog, versions });
+  writeChangelogToFile(curFilePath, { ...changelog, versions });
 };
+
+const optsToSectionType = (opts: Record<string, unknown>): SectionType | undefined => {
+  const { added, fixed, changed, removed, deprecated, security } = opts;
+  if (added === true) return 'added';
+  if (fixed === true) return 'fixed';
+  if (changed === true) return 'changed';
+  if (removed === true) return 'removed';
+  if (deprecated === true) return 'deprecated';
+  if (security === true) return 'security';
+  return undefined;
+};
+
+/*
 
 const processChangeCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const changelog = readChangelogFromFile(opt);
@@ -130,10 +125,10 @@ const readChangelogFromFile = (filePath: string) => {
   return strToChangelog(str);
 };
 
-const writeChangelogToFile = (opt: CliOpt, changelog: Changelog) => {
-  if (!existsSync(opt.filePath)) {
-    throw new Error(`changelog file not found at "${opt.filePath}"`);
+const writeChangelogToFile = (filePath: string, changelog: Changelog) => {
+  if (!existsSync(filePath)) {
+    throw new Error(`changelog file not found at "${filePath}"`);
   }
   const str = changelogToStr(changelog, { header: true, sortSections: true, sortItems: true });
-  writeFileSync(opt.filePath, str, 'utf-8');
+  writeFileSync(filePath, str, 'utf-8');
 };

@@ -14,7 +14,7 @@ const sectionTypeArr: SectionType[] = ['added', 'changed', 'deprecated', 'remove
  * @param val - section type
  * @returns section name
  */
-const sectionTypeToName = (val: SectionType): string => {
+export const sectionTypeToName = (val: SectionType): string => {
   switch (val) {
     case 'added':
       return 'Added';
@@ -36,7 +36,7 @@ const sectionTypeToName = (val: SectionType): string => {
  * @param val - section type
  * @returns incoming args array
  */
-const sectionTypeToArgParams = (val: SectionType): string[] => {
+export const sectionTypeToArgParams = (val: SectionType): string[] => {
   switch (val) {
     case 'added':
       return ['added', 'a'];
