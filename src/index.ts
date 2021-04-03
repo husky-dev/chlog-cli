@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { Command } from 'commander';
+import { getCmd, initCmd } from 'lib';
 
 const program = new Command();
 
@@ -13,22 +14,18 @@ program
   .option('-d, --debug', 'output extra debugging');
 
 program
-  .command('init [filename]')
+  .command('init [fileName]')
   .description('generate a new changelog file', {
-    filename: 'path to the changelog file (default: "./CHANGELOG.md")',
+    fileName: 'path to the changelog file (default: "./CHANGELOG.md")',
   })
-  .action((...args: unknown[]) => {
-    console.log(args);
-  });
+  .action((fileName: string | undefined) => initCmd(fileName));
 
 program
   .command('get [version]')
   .description('list records for all or specific versions', {
     version: 'exact (1.54.3) or part (1.54) name of the version',
   })
-  .action((...args) => {
-    console.log(args[0]);
-  });
+  .action((version: string | undefined) => getCmd(version));
 
 program
   .command('add <text> [link]')
@@ -43,7 +40,7 @@ program
   .option('-r, --removed', 'add to "Removed"')
   .option('-s, --security', 'add to "Security"')
   .action((...args) => {
-    console.log(args[0]);
+    console.log(args[0], args[1], args[2]);
   });
 
 program
