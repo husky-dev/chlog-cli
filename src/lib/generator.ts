@@ -31,6 +31,9 @@ const versionToStr = (version: Version, opt: GenOpt = defOpt): string => {
 const versionToTitle = ({ name, date }: Version) => (date ? `## [${name}] - ${date}` : `## [${name}]`);
 
 export const sectionsToStr = (sections: Section[], opt: GenOpt = defOpt): string => {
+  if (!sections.length) {
+    return '';
+  }
   const items = opt.sortSections ? sections.sort(sortSectionByNameFn) : sections;
   return items.map(itm => sectionToStr(itm, opt)).join('\n\n');
 };

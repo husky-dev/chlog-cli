@@ -14,13 +14,22 @@ export const initCmd = (curFilePath: string, fileName: string | undefined) => {
   writeFileSync(filePath, defChangelogTemplate);
 };
 
-export const getCmd = (curFilePath: string, version: string | undefined) => {
+export const getCmd = (curFilePath: string, version: string | undefined, opts: { errorOnEmpty?: unknown }) => {
   const changelog = readChangelogFromFile(curFilePath);
+  const { errorOnEmpty } = opts;
   if (version) {
     const sections = getSectionsWithVersion(changelog, version);
-    return log.simpleAndExit(sectionsToStr(sections));
+    const versionRes = sectionsToStr(sections);
+    if (errorOnEmpty === true && !versionRes) {
+      return log.errAndExit(`changelog for version "${version}" is empty`);
+    }
+    return log.simpleAndExit(versionRes);
   }
-  return log.simpleAndExit(changelogToStr(changelog, { header: false }));
+  const fullRes = changelogToStr(changelog, { header: false });
+  if (errorOnEmpty === true && !fullRes) {
+    return log.errAndExit(`changelog is empty`);
+  }
+  return log.simpleAndExit(fullRes);
 };
 
 export const addCmd = (

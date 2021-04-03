@@ -1,7 +1,7 @@
 {
   "name": "chlog-cli",
   "description": "CLI tool for managing CHANGELOG.md file based on \"Keep a Changelog\" file format",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "keywords": [
     "changelog",
     "cli"
@@ -43,20 +43,17 @@
       "prettier --write"
     ]
   },
-  "dependencies": {
-    "commander": "7.2.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/jest": "26.0.22",
-    "@types/minimist": "1.2.1",
     "@types/node": "14.14.37",
     "@typescript-eslint/eslint-plugin": "4.20.0",
     "@typescript-eslint/parser": "4.20.0",
+    "commander": "7.2.0",
     "eslint": "7.23.0",
     "husky": "6.0.0",
     "jest": "26.6.3",
     "lint-staged": "10.5.4",
-    "minimist": "1.2.5",
     "prettier": "2.2.1",
     "ts-jest": "26.5.4",
     "ts-loader": "8.1.0",

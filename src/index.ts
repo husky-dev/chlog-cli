@@ -31,7 +31,8 @@ program
   .description('list records for all or specific versions', {
     version: 'exact (1.54.3) or part (1.54) name of the version',
   })
-  .action((version: string | undefined) => getCmd(getFilePath(), version));
+  .option('--error-on-empty', 'return error code if result is empty')
+  .action((version: string | undefined, opts: { errorOnEmpty?: unknown }) => getCmd(getFilePath(), version, opts));
 
 program
   .command('add <version> <text> [link]')
