@@ -17,6 +17,7 @@ Global flags:
   --debug        Output verbose debugging information
 
 Commands:
+  init:     Init changelog
   get:      Get changelog
   add:      Add record to the changelog
   change:   Change version name or date

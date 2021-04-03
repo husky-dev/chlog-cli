@@ -5,9 +5,7 @@ import { dateToFormatedStr } from 'utils/date';
 import { changelogToStr, sectionsToStr } from './generator';
 import { strToChangelog } from './parser';
 import { Changelog, Version } from './types';
-import { argsToNewSectionItem, getSectionsWithVersion, mergeSections } from './utils';
-
-const defVersionParam = 'Unreleased';
+import { argsToNewSectionItem, defUnreleasedVersionName, getSectionsWithVersion, mergeSections } from './utils';
 
 export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) => {
   if (cmd === 'get') {
@@ -37,7 +35,7 @@ const processGetCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
 
 const processAddCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
   const changelog = readChangelogFromFile(opt);
-  const verParam = getArgsVersionParam(args) || defVersionParam;
+  const verParam = getArgsVersionParam(args) || defUnreleasedVersionName;
 
   const curVer = changelog.versions.find(itm => itm.name === verParam);
   if (!curVer) {

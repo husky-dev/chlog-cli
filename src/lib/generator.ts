@@ -8,7 +8,7 @@ export interface GenOpt {
 
 const defOpt: GenOpt = {
   sortItems: false,
-  sortSections: false,
+  sortSections: true,
   header: false,
 };
 
@@ -35,11 +35,11 @@ export const sectionsToStr = (sections: Section[], opt: GenOpt = defOpt): string
   return items.map(itm => sectionToStr(itm, opt)).join('\n\n');
 };
 
-const sortSectionByNameFn = (a: Section, b: Section): number => {
+export const sortSectionByNameFn = (a: Section, b: Section): number => {
   if (a.name === b.name) {
     return 0;
   } else {
-    return a.name > b.name ? 0 : 1;
+    return a.name < b.name ? -1 : 1;
   }
 };
 

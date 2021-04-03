@@ -1,6 +1,8 @@
 import { getArgsBoolParam, getArgsStrParam, UnknownParsedArgs } from 'utils';
 import { Changelog, Section, SectionType, Version } from './types';
 
+export const defUnreleasedVersionName = 'Unreleased';
+
 /**
  * Sections
  */
