@@ -16,3 +16,5 @@ export const isBool = (val: unknown): val is boolean => typeof val === 'boolean'
 export const isNull = (val: unknown): val is null => val === null;
 
 export const isUndef = (val: unknown): val is undefined => typeof val === 'undefined';
+
+export const last = <T = unknown>(val: T[]): T => val[val.length - 1];

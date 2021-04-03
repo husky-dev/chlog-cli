@@ -1,3 +1,5 @@
+import { last } from './types';
+
 export interface UnknownParsedArgs {
   [arg: string]: unknown;
   /** If opts['--'] is true, populated with everything after the -- */
@@ -38,4 +40,14 @@ export const getArgsVersionParamOrErr = (args: UnknownParsedArgs): string => {
     throw new Error('Version param required');
   }
   return v;
+};
+
+export const isArgsHelpRequest = (args: UnknownParsedArgs): boolean => {
+  if (last(args._) === 'help') {
+    return true;
+  }
+  if (getArgsBoolParam(args, ['help', 'h'])) {
+    return true;
+  }
+  return false;
 };

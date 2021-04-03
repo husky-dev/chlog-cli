@@ -1,5 +1,13 @@
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { CliOpt, getArgsStrParam, getArgsVersionParam, getArgsVersionParamOrErr, log, UnknownParsedArgs } from 'utils';
+import {
+  CliOpt,
+  getArgsStrParam,
+  getArgsVersionParam,
+  getArgsVersionParamOrErr,
+  isArgsHelpRequest,
+  log,
+  UnknownParsedArgs,
+} from 'utils';
 import { dateToFormatedStr } from 'utils/date';
 
 import { changelogToStr, sectionsToStr } from './generator';
@@ -8,6 +16,9 @@ import { Changelog, Version } from './types';
 import { argsToNewSectionItem, defUnreleasedVersionName, getSectionsWithVersion, mergeSections } from './utils';
 
 export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) => {
+  if (cmd === 'init') {
+    return processInitCmd(args, opt);
+  }
   if (cmd === 'get') {
     return processGetCmd(args, opt);
   }
@@ -21,6 +32,21 @@ export const processCmd = (cmd: string, args: UnknownParsedArgs, opt: CliOpt) =>
     return processRemoveCmd(args, opt);
   }
   throw new Error(`Unknown command "${cmd}"`);
+};
+
+const initCmdHelp = `Usage: chlog init [options]
+
+Generate initial CHANGELOG.md file
+
+Options:
+  -f, --file  File name (default: "CHANGELOG.md")
+`;
+
+const processInitCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
+  if (isArgsHelpRequest(args)) {
+    return log.simpleAndExit(initCmdHelp);
+  }
+  return;
 };
 
 const processGetCmd = (args: UnknownParsedArgs, opt: CliOpt) => {
